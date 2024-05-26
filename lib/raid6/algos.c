@@ -109,13 +109,13 @@ const struct raid6_recov_calls *const raid6_recov_algos[] = {
 
 static inline const struct raid6_recov_calls *raid6_choose_recov(void)
 {
-	const struct raid6_recov_calls *const *algo;
-	const struct raid6_recov_calls *best;
+	//const struct raid6_recov_calls *const *algo;
+	const struct raid6_recov_calls *best = &raid6_recov_intx1;
 
-	for (best = NULL, algo = raid6_recov_algos; *algo; algo++)
+	/*for (best = NULL, algo = raid6_recov_algos; *algo; algo++)
 		if (!best || (*algo)->priority > best->priority)
 			if (!(*algo)->valid || (*algo)->valid())
-				best = *algo;
+				best = *algo;*/
 
 	if (best) {
 		raid6_2data_recov = best->data2;
@@ -131,11 +131,11 @@ static inline const struct raid6_recov_calls *raid6_choose_recov(void)
 static inline const struct raid6_calls *raid6_choose_gen(
 	void *(*const dptrs)[(65536/PAGE_SIZE)+2], const int disks)
 {
-	unsigned long perf, bestperf, j0, j1;
-	const struct raid6_calls *const *algo;
-	const struct raid6_calls *best;
+	/*unsigned long perf, bestperf, j0, j1;
+	const struct raid6_calls *const *algo;*/
+	const struct raid6_calls *best = &raid6_neonx8;
 
-	for (bestperf = 0, best = NULL, algo = raid6_algos; *algo; algo++) {
+	/*for (bestperf = 0, best = NULL, algo = raid6_algos; *algo; algo++) {
 		if (!best || (*algo)->prefer >= best->prefer) {
 			if ((*algo)->valid && !(*algo)->valid())
 				continue;
@@ -160,12 +160,10 @@ static inline const struct raid6_calls *raid6_choose_gen(
 			pr_info("raid6: %-8s %5ld MB/s\n", (*algo)->name,
 			       (perf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2));
 		}
-	}
+	}*/
 
 	if (best) {
-		pr_info("raid6: using algorithm %s (%ld MB/s)\n",
-		       best->name,
-		       (bestperf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2));
+		pr_info("raid6: using algorithm %s \n", best->name);
 		raid6_call = *best;
 	} else
 		pr_err("raid6: Yikes!  No algorithm found!\n");
